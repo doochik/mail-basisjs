@@ -1,11 +1,17 @@
 basis.require('basis.ui');
 
+var messages = require('../model/m-messages.js').all;
+
 var vMessages = new basis.ui.Node({
+    dataSource: messages,
     active: true,
     template: resource('../template/messages.tmpl'),
-    dataSource: resource('../model/m-messages.js').fetch(),
     childClass: {
-        // описание класса view для дочерних элементов
+        template: '<div>#{mid} {subject}</div>',
+        binding: {
+            mid: 'data:',
+            subject: 'data:'
+        }
     }
 });
 

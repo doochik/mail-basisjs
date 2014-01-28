@@ -1,14 +1,22 @@
 basis.require('basis.data');
+basis.require('basis.entity');
 basis.require('basis.net');
 basis.require('basis.net.action');
 
-var mMessages = new basis.data.Dataset({
-    syncAction: basis.net.action.create({
-        url: '//mail.yandex.ru/neo2/handlers/handlers3.jsx?_handlers=messages',
-        success: function(data){
-            this.set(data);  // или путь до массива с элементами
-        }
-    })
+var Message = basis.entity.createType('Message', {
+    mid: basis.entity.StringId,
+    subject: String,
+    firstline: String
 });
 
-module.exports = mMessages;
+Message.all.setSyncAction(basis.net.action.create({
+    url: '/api/messages',
+    success: function(data){
+        var messagesList = data.handlers[0].data.message;
+        console.log(messagesList);
+        this.sync(messagesList);
+    }
+}));
+
+
+module.exports = Message;
